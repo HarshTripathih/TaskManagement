@@ -14,15 +14,15 @@ const connection = mysql.createConnection({
   database: process.env.DB_NAME,
 });
 
-const App = express();
+const app = express();
 const port = process.env.PORT || 3001;
 
-App.use(bodyParser.urlencoded({ extended: false }));
-App.use(bodyParser.json());
-App.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(cors());
 
 // Retrieve all tasks
-App.get('/api/tasks', (req, res) => {
+app.get('/api/tasks', (req, res) => {
   connection.query('SELECT * FROM tasksdata', (error, results) => {
     if (error) {
       console.error(error);
@@ -33,12 +33,12 @@ App.get('/api/tasks', (req, res) => {
   });
 });
 
-App.get('/user', (req, res) => {
+app.get('/user', (req, res) => {
   res.send({ message: "harsh is good " });
 })
 
 // Add a new task
-App.post('/api/tasks', (req, res) => {
+app.post('/api/tasks', (req, res) => {
   console.log(req.body);
 
   const { title, description } = req.body;
@@ -62,7 +62,7 @@ App.post('/api/tasks', (req, res) => {
 });
 
 // Update a task's status
-App.put('/api/tasks/:id', (req, res) => {
+app.put('/api/tasks/:id', (req, res) => {
   const taskId = req.params.id;
   const { completed } = req.body;
 
@@ -87,7 +87,7 @@ App.put('/api/tasks/:id', (req, res) => {
 
 
 // Delete a task
-App.delete('/api/tasks/:id', (req, res) => {
+app.delete('/api/tasks/:id', (req, res) => {
   const { id } = req.params;
 
   connection.query('DELETE FROM tasksdata WHERE id = ?', id, (error) => {
@@ -102,7 +102,7 @@ App.delete('/api/tasks/:id', (req, res) => {
 
 //get a single task detail
 
-App.get("/api/tasks/:id",(req,res)=>{
+app.get("/api/tasks/:id",(req,res)=>{
 
   const {id} = req.params;
 
@@ -116,6 +116,6 @@ App.get("/api/tasks/:id",(req,res)=>{
 });
 
 // Start the server
-App.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
